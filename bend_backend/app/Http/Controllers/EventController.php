@@ -53,4 +53,10 @@ class EventController extends AbstractController
         $event->delete();
         return $this->successResponse('Event deleted successfully', $event);
     }
+
+    public function myEvents($userId)
+    {
+        $events = Event::where('user_id', $userId)->get();
+        return $this->successResponse('Events retrieved successfully', EventResource::collection($events));
+    }
 }

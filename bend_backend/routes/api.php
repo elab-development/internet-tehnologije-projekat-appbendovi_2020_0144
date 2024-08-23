@@ -44,6 +44,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('favourite-bands-by-user/{userId}', [\App\Http\Controllers\FavouriteBandController::class, 'findByUser']);
     Route::get('favourite-bands-by-band/{bandId}', [\App\Http\Controllers\FavouriteBandController::class, 'findByBand']);
     Route::post('favourite-bands', [\App\Http\Controllers\FavouriteBandController::class, 'store']);
-
+    Route::get('my-events/{userId}', [\App\Http\Controllers\EventController::class, 'myEvents']);
 });
 
