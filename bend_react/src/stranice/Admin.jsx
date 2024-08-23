@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react';
 import Header from "../komponente/Header";
-import {Col, Row, Table} from "react-bootstrap";
+import {Col, Form, Row, Table} from "react-bootstrap";
 import server from "../server";
 import {Chart} from "react-google-charts";
+import useForm from "../useForm";
 
 const Admin = () => {
 
@@ -64,6 +65,83 @@ const Admin = () => {
             console.log(err);
         });
     }, [url, osvezi]);
+
+    const [formData, onChangeElement] = useForm({
+        name: '',
+        description: '',
+        search: ''
+    });
+
+    const dodajBend = () => {
+        server.post('/bands', {
+            name: formData.name,
+            description: formData.description
+        }).then(res => {
+            console.log(res.data);
+            setOsveziBendove(!osveziBendove);
+            setPoruka('Bend je uspešno dodat');
+        }).catch(err => {
+            console.log(err);
+            setPoruka('Došlo je do greške');
+        });
+    }
+
+    const [bands, setBands] = React.useState([]);
+    const [osveziBendove, setOsveziBendove] = React.useState(false);
+
+    useEffect(() => {
+        server.get('/bands').then(res => {
+            console.log(res.data);
+            setBands(res.data.data);
+        }).catch(err => {
+            console.log(err);
+        });
+    }, [osveziBendove]);
+
+    const [podaciSaTjuba, setPodaciSaTjuba] = React.useState([]);
+
+    const pretrazi = (e) => {
+        let search = formData.search
+
+        if (search.length < 3) {
+            return;
+        }
+
+
+        server.get('/search?search=' + search).then(res => {
+            console.log(res.data);
+            let podaci = [];
+
+            res.data.items.forEach(pesma => {
+                if (pesma.id.videoId !== undefined) {
+                    podaci.push({
+                        title: pesma.snippet.title,
+                        videoId: pesma.id.videoId,
+                    });  
+                }
+            });
+
+            setPodaciSaTjuba(podaci);
+
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+
+    const dodajPesmuUBend = (pesma) => {
+        server.post('/band-songs', {
+            band_id: formData.band_id,
+            name: pesma.title,
+            video_id: pesma.videoId
+        }).then(res => {
+            console.log(res.data);
+            setPoruka('Pesma je uspešno dodata');
+            setOsvezi(!osvezi);
+        }).catch(err => {
+            console.log(err);
+            setPoruka('Došlo je do greške');
+        });
+    }
 
     return (
         <>
@@ -129,6 +207,62 @@ const Admin = () => {
                             is3D: false,
                         }}
                     />
+                </Col>
+            </Row>
+
+            <Row>
+                <Col md={6}>
+                    <Form.Group>
+                        <Form.Label>Naziv benda</Form.Label>
+                        <Form.Control onChange={onChangeElement} name="name" type="text" placeholder="Unesite naziv benda"/>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Opis benda</Form.Label>
+                        <Form.Control onChange={onChangeElement} name="description" type="text" placeholder="Unesite opis benda"/>
+                    </Form.Group>
+                    <hr/>
+                    <button onClick={dodajBend} type="button" className="btn btn-dark">Dodaj bend</button>
+                </Col>
+                <Col md={6}>
+                    <Form.Group>
+                        <Form.Label>Izaberite bend</Form.Label>
+                        <Form.Select onChange={onChangeElement} name="band_id">
+                            {
+                                bands.map(bend => (
+                                    <option key={bend.id} value={bend.id}>{bend.name}</option>
+                                ))
+                            }
+                        </Form.Select>
+                    </Form.Group>
+
+
+                    <Form.Group>
+                        <Form.Label>Pretrazite</Form.Label>
+                        <Form.Control name="search" onChange={onChangeElement} type="text"/>
+                    </Form.Group>
+
+
+                    <hr/>
+                    <button onClick={pretrazi} type="button" className="btn btn-dark">Pretrazi</button>
+
+                    <hr/>
+
+                    {
+                        podaciSaTjuba.map(pesma => (
+                            <>
+                                <iframe className="m-1 p-1" id="iframe"
+                                        src={`https://www.youtube.com/embed/${pesma.videoId}`} title={pesma.title}
+                                        frameBorder="0" allowFullScreen></iframe>
+
+                                <button className="btn btn-dark" onClick={() => {
+                                    dodajPesmuUBend(pesma);
+                                }
+                                }>Dodaj pesmu</button>
+
+                            </>
+                        ))
+                    }
+
                 </Col>
             </Row>
         </>
