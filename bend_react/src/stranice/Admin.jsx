@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import Header from "../komponente/Header";
 import {Col, Row, Table} from "react-bootstrap";
 import server from "../server";
+import {Chart} from "react-google-charts";
 
 const Admin = () => {
 
@@ -12,6 +13,27 @@ const Admin = () => {
     const [links, setLinks] = React.useState([]);
     const [osvezi, setOsvezi] = React.useState(false);
 
+    const [chartData, setChartData] = React.useState([
+        ['Dogadjaj', 'Broj pesama']
+    ]);
+
+
+    useEffect(() => {
+        server.get('/chart-data').then(res => {
+            console.log(res.data);
+            let data = [
+                ['Dogadjaj', 'Broj pesama']
+            ];
+
+            res.data.data.forEach(dogadjaj => {
+                data.push([dogadjaj.event_name, parseInt(dogadjaj.total_songs)]);
+            });
+
+            setChartData(data);
+        }).catch(err => {
+            console.log(err);
+        })
+    }, []);
 
     const obrisi = (id) => {
         server.delete('/chosen-songs/' + id).then(res => {
@@ -91,6 +113,22 @@ const Admin = () => {
                             }>{link.label}</button>
                         ))
                     }
+                </Col>
+            </Row>
+
+            <Row>
+                <Col>
+                    <Chart
+                        chartType="PieChart"
+                        width="100%"
+                        height="400px"
+                        data={chartData}
+                        options={{
+                            title: "Pesme po dogadjajima",
+                            pieHole: 0.4,
+                            is3D: false,
+                        }}
+                    />
                 </Col>
             </Row>
         </>

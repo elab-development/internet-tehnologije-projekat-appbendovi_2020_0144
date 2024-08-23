@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\EventResource;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class EventController extends AbstractController
@@ -58,5 +59,17 @@ class EventController extends AbstractController
     {
         $events = Event::where('user_id', $userId)->get();
         return $this->successResponse('Events retrieved successfully', EventResource::collection($events));
+    }
+
+    public function songPerEvent(Request $request)
+    {
+        $songsPerEvent = DB::table('events')
+            ->join('chosen_songs', 'events.id', '=', 'chosen_songs.event_id')
+            ->join('band_songs', 'chosen_songs.band_song_id', '=', 'band_songs.id')
+            ->groupBy('events.event_name')
+            ->select('events.event_name', DB::raw('count(chosen_songs.band_song_id) as total_songs'))
+            ->get();
+
+        return $this->successResponse('Songs per event retrieved successfully', $songsPerEvent);
     }
 }

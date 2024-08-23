@@ -26,6 +26,7 @@ Route::get('events/{id}', [\App\Http\Controllers\EventController::class, 'show']
 Route::post('register', [\App\Http\Controllers\UserController::class, 'register']);
 Route::post('login', [\App\Http\Controllers\UserController::class, 'login']);
 Route::get('paginacija', [\App\Http\Controllers\ChosenSongController::class, 'paginationSongs']);
+Route::get('chart-data', [\App\Http\Controllers\EventController::class, 'songPerEvent']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('band-songs', [\App\Http\Controllers\BandSongController::class, 'index']);
