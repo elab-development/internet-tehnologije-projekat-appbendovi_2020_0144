@@ -9,6 +9,31 @@ const Repertoar = () => {
     const [izabraniBend, setIzabraniBend] = React.useState(null);
     const [songs, setSongs] = React.useState([]);
 
+    const komentari = [
+        'Ovaj bend je najbolji bend ikada',
+        'Svaka pesma je hit',
+        'Sviraju sve pesme koje volim',
+        'Sjajno smo proveli veče uz ovaj bend',
+    ];
+
+    const [testemonials, setTestemonials] = React.useState([]);
+
+    useEffect(() => {
+        server.get('https://randomuser.me/api/?results=4').then(res => {
+            console.log(res.data.results);
+            let data = res.data.results.map((user, index) => {
+                return {
+                    name: user.name.first + ' ' + user.name.last,
+                    image: user.picture.large,
+                    comment: komentari[index]
+                }
+            })
+            setTestemonials(data);
+        }).catch(err => {
+            console.log(err);
+        })
+    }, []);
+
     useEffect(() => {
         server.get("/bands").then(res => {
             console.log(res.data);
@@ -68,6 +93,26 @@ const Repertoar = () => {
                         }
 
                 </Col>
+            </Row>
+
+            <Row>
+                <Col md={12}>
+                    <h2 className="text-center">Komentari</h2>
+                </Col>
+
+                    {
+                        testemonials.map((testemonial, index) => (
+                            <Col key={index} md={3}>
+                                <div className="card m-1 p-1">
+                                    <img src={testemonial.image} alt={testemonial.name} className="card-img-top"/>
+                                    <div className="card-body">
+                                        <h5 className="card-title">{testemonial.name}</h5>
+                                        <p className="card-text">{testemonial.comment}</p>
+                                    </div>
+                                </div>
+                            </Col>
+                        ))
+                    }
             </Row>
         </>
     );
