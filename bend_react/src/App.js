@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navigacija from "./komponente/Navigacija";
@@ -10,6 +9,7 @@ import Registracija from "./stranice/Registracija";
 import Zakazi from "./stranice/Zakazi";
 import Admin from "./stranice/Admin";
 import {Container} from "react-bootstrap";
+import Footer from "./komponente/Footer";
 
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
     <>
       <Navigacija />
 
-       <Container>
+       <Container className="main">
            <BrowserRouter>
                <Routes>
                    <Route element={<Home/>} path="/" />
@@ -29,6 +29,7 @@ function App() {
                </Routes>
            </BrowserRouter>
        </Container>
+        <Footer />
 
     </>
   );

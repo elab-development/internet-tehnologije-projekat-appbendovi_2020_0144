@@ -17,3 +17,20 @@ body {
     align-items: center;
     flex-direction: column;
 }
+
+.main {
+    min-height: 600px;
+}
+
+footer {
+    background-color: #b7870f;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    font-size: 1.2em;
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
