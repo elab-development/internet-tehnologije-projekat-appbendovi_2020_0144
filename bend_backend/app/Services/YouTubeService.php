@@ -7,6 +7,7 @@ class YouTubeService
     public function search($query)
     {
         $apikey = config('services.youtube.key');
+        $query = str_replace(' ', '+', $query);
         $googleApiUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' . $query . '&maxResults=5&key=' . $apikey;
 
         $ch = curl_init();
