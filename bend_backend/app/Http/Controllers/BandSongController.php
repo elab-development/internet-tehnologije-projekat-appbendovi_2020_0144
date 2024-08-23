@@ -74,4 +74,10 @@ class BandSongController extends AbstractController
         $bandSong->delete();
         return $this->successResponse('Band Song deleted successfully', []);
     }
+
+    public function getBandSongsByBand(Request $request, $bandId)
+    {
+        $bandSongs = BandSong::where('band_id', $bandId)->get();
+        return $this->successResponse('Band Songs retrieved successfully', BandSongResource::collection($bandSongs));
+    }
 }

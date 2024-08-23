@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('search', [\App\Http\Controllers\YouTubeController::class, 'search']);
+Route::get('find-by-band/{bandId}', [\App\Http\Controllers\BandSongController::class, 'getBandSongsByBand']);
 
 Route::apiResource('bands', \App\Http\Controllers\BandController::class)->only('index', 'show');
 Route::get('band-songs', [\App\Http\Controllers\BandSongController::class, 'index']);
