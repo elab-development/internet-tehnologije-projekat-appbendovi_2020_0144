@@ -91,7 +91,7 @@ const Zakazi = () => {
 
     const ubaciPesmu = () => {
         server.post('/chosen-songs', {
-            event_id: izabraniDogjadjaj,
+            event_id: izabraniDogjadjaj.id,
             band_song_id: formData.band_song_id
         }).then(res => {
             console.log(res.data);
