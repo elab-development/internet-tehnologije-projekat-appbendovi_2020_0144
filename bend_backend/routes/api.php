@@ -18,6 +18,7 @@ Route::get('search', [\App\Http\Controllers\YouTubeController::class, 'search'])
 Route::get('find-by-band/{bandId}', [\App\Http\Controllers\BandSongController::class, 'getBandSongsByBand']);
 
 Route::apiResource('bands', \App\Http\Controllers\BandController::class)->only('index', 'show');
+//dupla ruta
 Route::get('band-songs', [\App\Http\Controllers\BandSongController::class, 'index']);
 Route::get('band-songs/{id}', [\App\Http\Controllers\BandSongController::class, 'show']);
 Route::get('events', [\App\Http\Controllers\EventController::class, 'index']);

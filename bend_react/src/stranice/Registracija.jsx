@@ -20,12 +20,12 @@ const Registracija = () => {
             if (res.data.success) {
                 setPoruka('Uspešno ste se registrovali');
             }else{
-                setPoruka('Pogrešan email ili lozinka');
+                setPoruka('Greška prilikom registrovanja!');
             }
 
         }).catch(err => {
             console.log(err);
-            setPoruka('Pogrešan email ili lozinka');
+            setPoruka('Greška prilikom registrovanja!');
         });
     }
 
